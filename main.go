@@ -14,14 +14,16 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "OK")
 }
 func main() {
-	http.HandleFunc("/", homeHandler)
-	http.HandleFunc("/health", healthHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", homeHandler)
+	mux.HandleFunc("/health", healthHandler)
 
 	server := &http.Server{
 		Addr:         ":8000",
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
+		Handler:      mux,
 	}
 
 	err := server.ListenAndServe()
